@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.room.Room;
+
+import java.util.List;
 
 public class AnswerActivity extends AppCompatActivity {
 
@@ -19,6 +22,7 @@ public class AnswerActivity extends AppCompatActivity {
     private Question question;
 
     private EditText editText;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,14 @@ public class AnswerActivity extends AppCompatActivity {
 
         question = getIntent().getParcelableExtra("id");
         textView = (TextView) findViewById(R.id.text);
+
+        db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "data").build();
+
+        LocalDataDao localDataDao = db.localDataDao();
+//        List<Data> listData = localDataDao.getAll();値表示maybe
+
+
 
         findViewById(R.id.button1).setOnClickListener(
                 new View.OnClickListener() {
@@ -48,6 +60,17 @@ public class AnswerActivity extends AppCompatActivity {
                         localDataStore.add(text);
 
                         System.out.println(localDataStore.get());
+
+                        new Thread(()-> {
+                            //room
+                            Data data = new Data();
+                            data.uid = 5;
+                            data.firstName = "Taro";
+                            data.lastName = "Yamada";
+                            localDataDao.insertAll(data);
+                            System.out.println(localDataDao.getAll());
+
+                        }).start();
 
                         Intent intent2 = new Intent(AnswerActivity.this,ResultActivity.class);
                         startActivity(intent2);
