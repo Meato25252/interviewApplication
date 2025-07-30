@@ -23,6 +23,7 @@ public class AnswerActivity extends AppCompatActivity {
 
     private EditText editText;
     private AppDatabase db;
+    private long nowId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,8 @@ public class AnswerActivity extends AppCompatActivity {
 
         LocalDataDao localDataDao = db.localDataDao();
 //        List<Data> listData = localDataDao.getAll();値表示maybe
+        Data data = new Data();
+        LocalDataStore localDataStore = new LocalDataStore();
 
 
 
@@ -54,26 +57,27 @@ public class AnswerActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LocalDataStore localDataStore = new LocalDataStore();
-                        editText = findViewById(R.id.edittext);
-                        String text = editText.getText().toString();
-                        localDataStore.add(text);
-
-                        System.out.println(localDataStore.get());
+//                        editText = findViewById(R.id.edittext);
+//                        String text = editText.getText().toString();
+//                        localDataStore.add(text);
 
                         new Thread(()-> {
                             //room
-                            Data data = new Data();
-                            data.uid = 5;
                             data.firstName = "Taro";
                             data.lastName = "Yamada";
-                            localDataDao.insertAll(data);
+                            nowId=localDataDao.insertAll(data);
                             System.out.println(localDataDao.getAll());
+                            System.out.println(nowId);
+
+                            runOnUiThread(()->{
+                                System.out.println(nowId);
+                                Intent intent2 = new Intent(AnswerActivity.this,ResultActivity.class);
+                                intent2.putExtra("nowId",nowId);
+                                startActivity(intent2);
+                            });
 
                         }).start();
 
-                        Intent intent2 = new Intent(AnswerActivity.this,ResultActivity.class);
-                        startActivity(intent2);
                     }
                 }
         );

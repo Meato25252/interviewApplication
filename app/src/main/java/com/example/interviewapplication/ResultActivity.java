@@ -17,12 +17,21 @@ public class ResultActivity extends AppCompatActivity {
     private TextView textView;
 
     private Button button;
+    private AppDatabase db;
+    private long nowId;
 
     private LocalDataStore localDataStore;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        nowId = getIntent().getLongExtra("nowId",-1);
+
+        db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "data").build();
+
+        LocalDataDao localDataDao = db.localDataDao();
 
         textView=findViewById(R.id.text);
 
@@ -32,23 +41,25 @@ public class ResultActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(ResultActivity.this,MainActivity.class);
                         startActivity(intent);
+
+                        Data data = new Data();
+                        System.out.println(nowId);
+
+                        new Thread(()-> {
+                            //room
+//                            Data data = new Data();
+                            data.uid=nowId;
+                            data.firstName = "test";
+                            data.lastName = "test";
+                            localDataDao.updateAll(data);
+                            System.out.println(localDataDao.getAll());
+
+                        }).start();
+
                     }
                 }
         );
 
     }
-
-//    @Override
-//    protected void onStart(){
-//        super.onStart();
-//
-//        textView.setText(change(localDataStore.get()));
-//    }
-//
-//    public String change(List<String> list){
-//        //仮置き
-//        return list.get(0);
-//    }
-
 }
 

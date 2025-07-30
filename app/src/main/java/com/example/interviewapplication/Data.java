@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Data {
 
-    @PrimaryKey
-    public int uid;
+    @PrimaryKey(autoGenerate = true)
+    public long uid;
 
     @ColumnInfo(name = "first_name")
     public String firstName;
