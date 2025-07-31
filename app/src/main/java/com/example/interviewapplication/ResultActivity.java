@@ -8,9 +8,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
-
-import java.util.List;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -19,12 +19,18 @@ public class ResultActivity extends AppCompatActivity {
     private Button button;
     private AppDatabase db;
     private long nowId;
+    private String[] str;
 
     private LocalDataStore localDataStore;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        str=new String[3];
+        str[0] = "10";
+        str[1] = "20";
+        str[2] = "30";
 
         nowId = getIntent().getLongExtra("nowId",-1);
 
@@ -33,7 +39,12 @@ public class ResultActivity extends AppCompatActivity {
 
         LocalDataDao localDataDao = db.localDataDao();
 
-        textView=findViewById(R.id.text);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        RecyclerView.Adapter mainAdapter = new CustomAdapter(str);
+        recyclerView.setAdapter(mainAdapter);
 
         findViewById(R.id.button).setOnClickListener(
                 new View.OnClickListener() {
@@ -47,7 +58,6 @@ public class ResultActivity extends AppCompatActivity {
 
                         new Thread(()-> {
                             //room
-//                            Data data = new Data();
                             data.uid=nowId;
                             data.firstName = "test";
                             data.lastName = "test";
