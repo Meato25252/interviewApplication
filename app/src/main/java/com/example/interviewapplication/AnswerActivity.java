@@ -20,7 +20,6 @@ public class AnswerActivity extends AppCompatActivity {
 
     private TextView textView;
     private Question question;
-
     private EditText editText;
     private AppDatabase db;
     private long nowId;
@@ -37,10 +36,8 @@ public class AnswerActivity extends AppCompatActivity {
                 AppDatabase.class, "data").build();
 
         LocalDataDao localDataDao = db.localDataDao();
-//        List<Data> listData = localDataDao.getAll();値表示maybe
         Data data = new Data();
-        LocalDataStore localDataStore = new LocalDataStore();
-
+//        LocalDataStore localDataStore = new LocalDataStore();
 
 
         findViewById(R.id.button1).setOnClickListener(
@@ -57,13 +54,13 @@ public class AnswerActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        editText = findViewById(R.id.edittext);
-//                        String text = editText.getText().toString();
+                        editText = findViewById(R.id.edittext);
+                        String text = editText.getText().toString();
 //                        localDataStore.add(text);
 
                         new Thread(()-> {
                             //room
-                            data.firstName = "Taro";
+                            data.text1 = text;
                             data.lastName = "Yamada";
                             nowId=localDataDao.insertAll(data);
                             System.out.println(localDataDao.getAll());
@@ -75,9 +72,7 @@ public class AnswerActivity extends AppCompatActivity {
                                 intent2.putExtra("nowId",nowId);
                                 startActivity(intent2);
                             });
-
                         }).start();
-
                     }
                 }
         );

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,24 +28,41 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        str=new String[3];
-        str[0] = "10";
-        str[1] = "20";
-        str[2] = "30";
-
         nowId = getIntent().getLongExtra("nowId",-1);
+        str=new String[(int)nowId+1];
 
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "data").build();
 
         LocalDataDao localDataDao = db.localDataDao();
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.main_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        RecyclerView.Adapter mainAdapter = new CustomAdapter(str);
-        recyclerView.setAdapter(mainAdapter);
+
+        new Thread(()-> {
+            for(long i=1;i<=nowId;i++){
+                str[(int)i-1]=localDataDao.getById(i);
+            }
+
+            runOnUiThread(()->{
+                for(int j=0;j<nowId;j++){
+                    System.out.println(str[j]);
+                }
+                CustomAdapter mainAdapter = new CustomAdapter(str);//親クラスで子クラスを呼び出している
+                recyclerView.setAdapter(mainAdapter);
+//                mainAdapter.setOnItemClickListener(
+//                        new CustomAdapter.onItemClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        System.out.println("aaa");
+//                    }
+//                });
+            });
+        }).start();
+
+
 
         findViewById(R.id.button).setOnClickListener(
                 new View.OnClickListener() {
@@ -56,15 +74,15 @@ public class ResultActivity extends AppCompatActivity {
                         Data data = new Data();
                         System.out.println(nowId);
 
-                        new Thread(()-> {
-                            //room
-                            data.uid=nowId;
-                            data.firstName = "test";
-                            data.lastName = "test";
-                            localDataDao.updateAll(data);
-                            System.out.println(localDataDao.getAll());
-
-                        }).start();
+//                        new Thread(()-> {
+//                            //room
+//                            data.uid=nowId;
+//                            data.lastName = "test";
+//                            System.out.println(localDataDao.getById(nowId));
+//                            localDataDao.updateAll(data);
+//                            System.out.println(localDataDao.getAll());
+//
+//                        }).start();
 
                     }
                 }

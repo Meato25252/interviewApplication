@@ -10,8 +10,8 @@ public class Data {
     @PrimaryKey(autoGenerate = true)
     public long uid;
 
-    @ColumnInfo(name = "first_name")
-    public String firstName;
+    @ColumnInfo(name = "text1")
+    public String text1;
 
     @ColumnInfo(name = "last_name")
     public String lastName;
@@ -20,7 +20,7 @@ public class Data {
     public String toString() {
         return "Data{" +
                 "uid=" + uid +
-                ", firstName='" + firstName + '\'' +
+                ", text1='" + text1 + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
     }

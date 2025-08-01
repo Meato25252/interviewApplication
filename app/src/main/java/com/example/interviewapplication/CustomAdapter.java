@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private String[] localDataSet;
+//    private onItemClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
@@ -16,6 +17,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public ViewHolder(View view) {
             super(view);
             textView = (TextView) view.findViewById(R.id.textView);
+
+//            view.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    listener.onClick(view);
+//                }
+//            });
         }
         public TextView getTextView() {
             return textView;
@@ -29,7 +37,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.activity_result, viewGroup, false);
+                .inflate(R.layout.recycler_row, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -41,6 +49,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
+        System.out.println("★"+localDataSet.length);
         return localDataSet.length;
     }
+
+//    public interface onItemClickListener{
+//        void onClick(View view);
+//    }
+//
+//    public void setOnItemClickListener(onItemClickListener listener) {
+//        this.listener = listener;
+//    }
 }
