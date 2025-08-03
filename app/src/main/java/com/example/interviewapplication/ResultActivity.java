@@ -41,26 +41,44 @@ public class ResultActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
 
-        new Thread(()-> {
-            for(long i=1;i<=nowId;i++){
-                str[(int)i-1]=localDataDao.getById(i);
-            }
-
-            runOnUiThread(()->{
-                for(int j=0;j<nowId;j++){
-                    System.out.println(str[j]);
-                }
-                CustomAdapter mainAdapter = new CustomAdapter(str);//親クラスで子クラスを呼び出している
-                recyclerView.setAdapter(mainAdapter);
+//        new Thread(()-> {
+//            for(long i=1;i<=nowId;i++){
+//                str[(int)i-1]=localDataDao.getById(i);
+//            }
+//
+//            runOnUiThread(()->{
+//                for(int j=0;j<nowId;j++){
+//                    System.out.println(str[j]);
+//                }
+//                CustomAdapter mainAdapter = new CustomAdapter(str);//親クラスで子クラスを呼び出している
+//                recyclerView.setAdapter(mainAdapter);
 //                mainAdapter.setOnItemClickListener(
 //                        new CustomAdapter.onItemClickListener() {
 //                    @Override
-//                    public void onClick(View view) {
-//                        System.out.println("aaa");
+//                    public void onClick(View view,String str) {
+//                        Intent intent = new Intent(ResultActivity.this,DetailActivity.class);
+//                        startActivity(intent);
 //                    }
 //                });
-            });
-        }).start();
+//            });
+//        }).start();
+
+        for(int i=1;i<=nowId;i++){
+            str[i-1]=String.valueOf(i);
+        }
+
+        CustomAdapter mainAdapter = new CustomAdapter(str);//親クラスで子クラスを呼び出している
+        recyclerView.setAdapter(mainAdapter);
+        mainAdapter.setOnItemClickListener(
+                new CustomAdapter.onItemClickListener() {
+                    @Override
+                    public void onClick(View view,String str) {
+                        Intent intent = new Intent(ResultActivity.this,DetailActivity.class);
+                        intent.putExtra("id",str);
+                        intent.putExtra("nowId",nowId);
+                        startActivity(intent);
+                    }
+                });
 
 
 

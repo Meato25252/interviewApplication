@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private String[] localDataSet;
-//    private onItemClickListener listener;
+    private onItemClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
@@ -17,13 +17,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public ViewHolder(View view) {
             super(view);
             textView = (TextView) view.findViewById(R.id.textView);
-
-//            view.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    listener.onClick(view);
-//                }
-//            });
         }
         public TextView getTextView() {
             return textView;
@@ -45,6 +38,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         viewHolder.getTextView().setText(localDataSet[position]);
+        viewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClick(v,localDataSet[viewHolder.getAdapterPosition()]);
+            }
+        });
     }
 
     @Override
@@ -53,11 +52,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         return localDataSet.length;
     }
 
-//    public interface onItemClickListener{
-//        void onClick(View view);
-//    }
-//
-//    public void setOnItemClickListener(onItemClickListener listener) {
-//        this.listener = listener;
-//    }
+    public interface onItemClickListener{
+        void onClick(View view,String str);
+    }
+
+    public void setOnItemClickListener(onItemClickListener listener) {
+        this.listener = listener;
+    }
 }

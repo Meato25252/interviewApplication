@@ -14,6 +14,7 @@
 
         <activity android:name=".AnswerActivity" />
         <activity android:name=".ResultActivity" />
+        <activity android:name=".DetailActivity" />
 
         <activity
             android:name=".MainActivity"
