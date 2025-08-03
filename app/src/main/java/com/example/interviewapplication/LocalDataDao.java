@@ -23,5 +23,8 @@ interface LocalDataDao {
     List<Data> getAll();
 
     @Query("SELECT text1 FROM Data WHERE uid = :id")
-    String getById(long id);
+    String getBytext1(long id);
+
+    @Query("SELECT tag FROM Data WHERE uid = :id")
+    String getBytag(long id);
 }

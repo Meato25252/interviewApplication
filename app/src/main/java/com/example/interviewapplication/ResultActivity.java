@@ -29,56 +29,58 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         nowId = getIntent().getLongExtra("nowId",-1);
-        str=new String[(int)nowId+1];
+        str=new String[(int)nowId];
 
-        db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "data").build();
-
-        LocalDataDao localDataDao = db.localDataDao();
+//        db = Room.databaseBuilder(getApplicationContext(),
+//                AppDatabase.class, "data").build();
+//
+//        LocalDataDao localDataDao = db.localDataDao();
 
         RecyclerView recyclerView = findViewById(R.id.main_recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
 
-//        new Thread(()-> {
-//            for(long i=1;i<=nowId;i++){
-//                str[(int)i-1]=localDataDao.getById(i);
-//            }
+        new Thread(()-> {
+            for(int i=1;i<=nowId;i++){
+                String text=String.valueOf(i);
+                str[i-1]=text;
+            }
+
+            runOnUiThread(()->{
+//                System.out.println(str.length+"：最大値です。");
+                CustomAdapter mainAdapter = new CustomAdapter(str);//親クラスで子クラスを呼び出している
+                recyclerView.setAdapter(mainAdapter);
+                mainAdapter.setOnItemClickListener(
+                        new CustomAdapter.onItemClickListener() {
+                            @Override
+                            public void onClick(View view,String str) {
+                                Intent intent = new Intent(ResultActivity.this,DetailActivity.class);
+                                intent.putExtra("id",str);
+                                intent.putExtra("nowId",nowId);
+                                startActivity(intent);
+                            }
+                        });
+            });
+        }).start();
+
+//        for(int i=1;i<=nowId;i++){
+//            String text=String.valueOf(i);
+//            str[i-1]=text;
+//        }
 //
-//            runOnUiThread(()->{
-//                for(int j=0;j<nowId;j++){
-//                    System.out.println(str[j]);
-//                }
-//                CustomAdapter mainAdapter = new CustomAdapter(str);//親クラスで子クラスを呼び出している
-//                recyclerView.setAdapter(mainAdapter);
-//                mainAdapter.setOnItemClickListener(
-//                        new CustomAdapter.onItemClickListener() {
+//        CustomAdapter mainAdapter = new CustomAdapter(str);//親クラスで子クラスを呼び出している
+//        recyclerView.setAdapter(mainAdapter);
+//        mainAdapter.setOnItemClickListener(
+//                new CustomAdapter.onItemClickListener() {
 //                    @Override
 //                    public void onClick(View view,String str) {
 //                        Intent intent = new Intent(ResultActivity.this,DetailActivity.class);
+//                        intent.putExtra("id",str);
+//                        intent.putExtra("nowId",nowId);
 //                        startActivity(intent);
 //                    }
 //                });
-//            });
-//        }).start();
-
-        for(int i=1;i<=nowId;i++){
-            str[i-1]=String.valueOf(i);
-        }
-
-        CustomAdapter mainAdapter = new CustomAdapter(str);//親クラスで子クラスを呼び出している
-        recyclerView.setAdapter(mainAdapter);
-        mainAdapter.setOnItemClickListener(
-                new CustomAdapter.onItemClickListener() {
-                    @Override
-                    public void onClick(View view,String str) {
-                        Intent intent = new Intent(ResultActivity.this,DetailActivity.class);
-                        intent.putExtra("id",str);
-                        intent.putExtra("nowId",nowId);
-                        startActivity(intent);
-                    }
-                });
 
 
 

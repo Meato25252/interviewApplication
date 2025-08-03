@@ -13,15 +13,15 @@ public class Data {
     @ColumnInfo(name = "text1")
     public String text1;
 
-    @ColumnInfo(name = "last_name")
-    public String lastName;
+    @ColumnInfo(name = "tag")
+    public String tag;
 
     @Override
     public String toString() {
         return "Data{" +
                 "uid=" + uid +
                 ", text1='" + text1 + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", tag='" + tag + '\'' +
                 '}';
     }
 }

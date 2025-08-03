@@ -12,6 +12,12 @@
         android:text="ホーム"
         android:textSize="20dp"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="履歴"
+        android:textSize="36dp"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/main_recycler_view"

@@ -32,6 +32,8 @@ public class AnswerActivity extends AppCompatActivity {
         question = getIntent().getParcelableExtra("id");
         textView = (TextView) findViewById(R.id.text);
 
+        System.out.println("■："+question);
+
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "data").build();
 
@@ -61,7 +63,7 @@ public class AnswerActivity extends AppCompatActivity {
                         new Thread(()-> {
                             //room
                             data.text1 = text;
-                            data.lastName = "Yamada";
+                            data.tag = question.getText();
                             nowId=localDataDao.insertAll(data);
                             System.out.println(localDataDao.getAll());
                             System.out.println(nowId);
