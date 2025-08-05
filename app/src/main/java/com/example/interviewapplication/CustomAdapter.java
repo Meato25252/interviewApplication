@@ -1,5 +1,6 @@
 package com.example.interviewapplication;
 
+import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private String[] localDataSet;
     private onItemClickListener listener;
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;

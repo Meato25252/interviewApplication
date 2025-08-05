@@ -2,6 +2,7 @@ package com.example.interviewapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,19 +16,36 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
 
 import java.util.List;
+import java.util.Locale;
 
-public class AnswerActivity extends AppCompatActivity {
+public class AnswerActivity extends AppCompatActivity{
 
     private TextView textView;
     private Question question;
     private EditText editText;
     private AppDatabase db;
     private long nowId;
+    private TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
+
+
+
+        textToSpeech= new TextToSpeech(AnswerActivity.this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (TextToSpeech.SUCCESS == status) {
+                    System.out.println("debug"+"initialized");
+                    textToSpeech.setLanguage(Locale.JAPANESE);
+                    textToSpeech.speak(question.getText(),TextToSpeech.QUEUE_FLUSH,null);
+                } else {
+                    System.out.println("debug"+"failed to initialize");
+                }
+            }
+        });
 
         question = getIntent().getParcelableExtra("id");
         textView = (TextView) findViewById(R.id.text);
@@ -85,5 +103,14 @@ public class AnswerActivity extends AppCompatActivity {
         super.onStart();
 
         textView.setText(question.getText());
+
     }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        textToSpeech.stop();
+        textToSpeech.shutdown();
+    }
+
 }
