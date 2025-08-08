@@ -26,6 +26,9 @@ import androidx.room.Room;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import android.os.CountDownTimer;
+
+import org.w3c.dom.Text;
 
 public class AnswerActivity extends AppCompatActivity{
 
@@ -38,13 +41,16 @@ public class AnswerActivity extends AppCompatActivity{
     private SpeechRecognizer speechRecognizer;
     private Boolean flag=true;
     private Intent intentR;
-
-    ArrayList<String> matches;
+    private ArrayList<String> matches;
+    private CountDownTimer countDownTimer;
+    private TextView textView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
+
+
 
         if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, RECORD_AUDIO)) {
@@ -76,6 +82,8 @@ public class AnswerActivity extends AppCompatActivity{
             @Override
             public void onError(int error) {
                 System.out.println("SpeechRecognizer エラー: " + error);
+                countDownTimer.cancel();
+                textView2.setText("エラー");
                 switch (error) {
                     case SpeechRecognizer.ERROR_AUDIO:
                         System.out.println("ERROR_AUDIO");
@@ -120,8 +128,10 @@ public class AnswerActivity extends AppCompatActivity{
                 matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 if (matches != null && !matches.isEmpty()) {
                     System.out.println("Speech" + "認識結果: " + matches.get(0));
+                    countDownTimer.cancel();
+                    textView2.setText("終了");
                 }else{
-                    System.out.println("null");
+                    System.out.println("★★null");
                 }
             }
 
@@ -147,6 +157,7 @@ public class AnswerActivity extends AppCompatActivity{
         });
 
         textView = (TextView) findViewById(R.id.text);
+        textView2 = (TextView) findViewById(R.id.timer);
 
         System.out.println("■："+question);
 
@@ -155,7 +166,6 @@ public class AnswerActivity extends AppCompatActivity{
 
         LocalDataDao localDataDao = db.localDataDao();
         Data data = new Data();
-//        LocalDataStore localDataStore = new LocalDataStore();
 
         intentR = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intentR.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
@@ -177,12 +187,7 @@ public class AnswerActivity extends AppCompatActivity{
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        editText = findViewById(R.id.edittext);
-//                        String text = editText.getText().toString();
-//                        localDataStore.add(text);
-
                         new Thread(()-> {
-                            //room
                             if(matches == null || matches.isEmpty()){
                                 data.text1="入力がされませんでした。";
                             }else{
@@ -208,15 +213,13 @@ public class AnswerActivity extends AppCompatActivity{
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println("■"+flag);
                         System.out.println("aaaa");
                         speechRecognizer.startListening(intentR);
-//                        }else{
-//                            speechRecognizer.stopListening();
-//                            flag=true;
+                        startTimer();
                     }
                 }
         );
+
     }
 
     @Override
@@ -236,4 +239,24 @@ public class AnswerActivity extends AppCompatActivity{
         speechRecognizer.destroy();
     }
 
+    private void startTimer(){
+        countDownTimer = new CountDownTimer(30000,1000) {
+            @Override
+            public void onFinish() {
+                textView2.setText("時間切れ");
+                speechRecognizer.stopListening();
+            }
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                textView2.setText(String.valueOf("00:"+millisUntilFinished/1000));
+            }
+        }.start();
+
+        countDownTimer.start();
+    }
+
 }
+
+
+//trueでバグを消してもいいかも
