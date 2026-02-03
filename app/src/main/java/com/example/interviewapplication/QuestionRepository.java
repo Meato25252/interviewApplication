@@ -29,9 +29,4 @@ public class QuestionRepository {
     public Question getQuestion(String id) {
         return questionMap.get(id);
     }
-//
-//    public Set<String> getInitialQuestionIds() {
-//        // 最初にユーザーに表示する質問（深掘りではないやつ）
-//        return Set.of("intro", "gakuchika", "strength", "weakness");
-//    }
 }

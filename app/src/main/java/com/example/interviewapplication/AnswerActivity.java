@@ -219,15 +219,12 @@ public class AnswerActivity extends AppCompatActivity{
                     }
                 }
         );
-
     }
 
     @Override
     protected void onStart(){
         super.onStart();
-
         textView.setText(question.getText());
-
     }
 
     @Override
@@ -255,8 +252,4 @@ public class AnswerActivity extends AppCompatActivity{
 
         countDownTimer.start();
     }
-
 }
-
-
-//trueでバグを消してもいいかも
