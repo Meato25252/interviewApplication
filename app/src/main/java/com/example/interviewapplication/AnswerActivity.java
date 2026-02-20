@@ -50,18 +50,6 @@ public class AnswerActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
 
-        if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, RECORD_AUDIO)) {
-                // 拒否した場合
-
-            } else {
-                // 許可した場合
-                int MY_PERMISSIONS_RECORD_AUDIO = 1;
-                ActivityCompat.requestPermissions(this, new String[]{RECORD_AUDIO}, MY_PERMISSIONS_RECORD_AUDIO);
-            }
-        }
-
-
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(AnswerActivity.this);
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override

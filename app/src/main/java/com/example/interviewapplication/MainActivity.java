@@ -1,12 +1,18 @@
 package com.example.interviewapplication;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,6 +30,15 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, RECORD_AUDIO)) {
+                showPermissionExplanation();
+            } else {
+                int MY_PERMISSIONS_RECORD_AUDIO = 1;
+                ActivityCompat.requestPermissions(this, new String[]{RECORD_AUDIO}, MY_PERMISSIONS_RECORD_AUDIO);
+            }
+        }
 
         findViewById(R.id.button1).setOnClickListener(
                 new View.OnClickListener(){
@@ -78,6 +93,16 @@ public class MainActivity extends AppCompatActivity {
     private Question selectQuestion(String id){
         QuestionRepository questionRepository=new QuestionRepository();
         return questionRepository.getQuestion(id);
+    }
 
+    private void showPermissionExplanation(){
+        new AlertDialog.Builder(this)
+                .setTitle("マイクの権限が必要です")
+                .setMessage("音声入力機能を使うためにマイクの権限が必要です")
+                .setPositiveButton("許可する", (dialog, which) -> {
+                    ActivityCompat.requestPermissions(this, new String[]{RECORD_AUDIO}, 1);
+                })
+                .setNegativeButton("キャンセル", null)
+                .show();
     }
 }
