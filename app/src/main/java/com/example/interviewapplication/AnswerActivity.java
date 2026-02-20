@@ -34,7 +34,6 @@ public class AnswerActivity extends AppCompatActivity{
 
     private TextView textView;
     private Question question;
-    private EditText editText;
     private AppDatabase db;
     private long nowId;
     private TextToSpeech textToSpeech;
@@ -214,7 +213,7 @@ public class AnswerActivity extends AppCompatActivity{
     protected void onPause() {
         super.onPause();
         speechRecognizer.stopListening();
-        countDownTimer.cancel();
+        textToSpeech.stop();
     }
 
 
@@ -225,6 +224,7 @@ public class AnswerActivity extends AppCompatActivity{
         textToSpeech.shutdown();
         speechRecognizer.cancel();
         speechRecognizer.destroy();
+        System.out.println("aaa");
     }
 
     private void startTimer(){
