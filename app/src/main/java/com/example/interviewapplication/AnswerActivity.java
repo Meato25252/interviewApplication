@@ -39,11 +39,11 @@ public class AnswerActivity extends AppCompatActivity{
     private long nowId;
     private TextToSpeech textToSpeech;
     private SpeechRecognizer speechRecognizer;
-    private Boolean flag=true;
     private Intent intentR;
     private ArrayList<String> matches;
     private CountDownTimer countDownTimer;
     private TextView textView2;
+    private boolean isTimer = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,23 +62,15 @@ public class AnswerActivity extends AppCompatActivity{
             }
         }
 
+
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(AnswerActivity.this);
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
-            public void onBeginningOfSpeech() {
-
-            }
-
+            public void onBeginningOfSpeech() {}
             @Override
-            public void onBufferReceived(byte[] buffer) {
-
-            }
-
+            public void onBufferReceived(byte[] buffer) {}
             @Override
-            public void onEndOfSpeech() {
-
-            }
-
+            public void onEndOfSpeech() {}
             @Override
             public void onError(int error) {
                 System.out.println("SpeechRecognizer エラー: " + error);
@@ -90,6 +82,8 @@ public class AnswerActivity extends AppCompatActivity{
                         break;
                     case SpeechRecognizer.ERROR_CLIENT:
                         System.out.println("ERROR_CLIENT");
+                        isTimer=true;
+                        System.out.println(isTimer);
                         break;
                     case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                         System.out.println("ERROR_INSUFFICIENT_PERMISSIONS");
@@ -99,6 +93,8 @@ public class AnswerActivity extends AppCompatActivity{
                         break;
                     case SpeechRecognizer.ERROR_NO_MATCH:
                         System.out.println("ERROR_NO_MATCH");
+                        isTimer=true;
+                        System.out.println(isTimer);
                         break;
                     case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                         System.out.println("ERROR_RECOGNIZER_BUSY");
@@ -107,39 +103,29 @@ public class AnswerActivity extends AppCompatActivity{
                         System.out.println("その他のエラー: " + error);
                 }
             }
-
             @Override
-            public void onEvent(int eventType, Bundle params) {
-
-            }
-
+            public void onEvent(int eventType, Bundle params) {}
             @Override
-            public void onPartialResults(Bundle partialResults) {
-
-            }
-
+            public void onPartialResults(Bundle partialResults) {}
             @Override
-            public void onReadyForSpeech(Bundle params) {
-
-            }
-
+            public void onReadyForSpeech(Bundle params) {}
             @Override
             public void onResults(Bundle results) {
                 matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 if (matches != null && !matches.isEmpty()) {
                     System.out.println("Speech" + "認識結果: " + matches.get(0));
                     countDownTimer.cancel();
+                    isTimer=true;
+                    System.out.println(isTimer);
                     textView2.setText("終了");
                 }else{
                     System.out.println("★★null");
                 }
             }
-
             @Override
-            public void onRmsChanged(float rmsdB) {
-
-            }
+            public void onRmsChanged(float rmsdB) {}
         });
+
 
         question = getIntent().getParcelableExtra("id");
 
@@ -209,13 +195,23 @@ public class AnswerActivity extends AppCompatActivity{
                 }
         );
 
+
         findViewById(R.id.button3).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         System.out.println("aaaa");
                         speechRecognizer.startListening(intentR);
-                        startTimer();
+                        if(isTimer) {
+                            System.out.println("test1");
+                            startTimer();
+                            isTimer=false;
+                        }else{
+                            System.out.println("test2");
+                            countDownTimer.cancel();
+                            speechRecognizer.cancel();
+                            isTimer=true;
+                        }
                     }
                 }
         );
@@ -243,13 +239,12 @@ public class AnswerActivity extends AppCompatActivity{
                 textView2.setText("時間切れ");
                 speechRecognizer.stopListening();
             }
-
             @Override
             public void onTick(long millisUntilFinished) {
                 textView2.setText(String.valueOf("00:"+millisUntilFinished/1000));
             }
-        }.start();
 
+        }.start();
         countDownTimer.start();
     }
 }

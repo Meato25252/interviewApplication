@@ -27,14 +27,6 @@ public class Question implements Parcelable {
         return text;
     }
 
-    public String getType(){
-        return type;
-    }
-
-    public List<String> getFollowUpIds(){
-        return followUpIds;
-    }
-
     protected Question(Parcel in){
         this.id=in.readString();
         this.text=in.readString();
