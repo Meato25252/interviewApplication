@@ -50,11 +50,10 @@ public class AnswerActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
 
-
-
         if (ContextCompat.checkSelfPermission(this, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, RECORD_AUDIO)) {
                 // 拒否した場合
+
             } else {
                 // 許可した場合
                 int MY_PERMISSIONS_RECORD_AUDIO = 1;
@@ -224,6 +223,14 @@ public class AnswerActivity extends AppCompatActivity{
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        speechRecognizer.stopListening();
+        countDownTimer.cancel();
+    }
+
+
+    @Override
     protected void onDestroy(){
         super.onDestroy();
         textToSpeech.stop();
@@ -243,8 +250,6 @@ public class AnswerActivity extends AppCompatActivity{
             public void onTick(long millisUntilFinished) {
                 textView2.setText(String.valueOf("00:"+millisUntilFinished/1000));
             }
-
         }.start();
-        countDownTimer.start();
     }
 }
